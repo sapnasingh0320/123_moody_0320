@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Yu Gothic UI', sans-serif;
+            color: white;
+        }
+        .login-container {
+            margin: 0 auto;
+            max-width: 1500px;
+            padding: 20px;
+            background-color: #000;
+            border: 2px solid #004aad;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            height: 900px;
+            font-size: 25px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 60%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-bottom: 2px solid #004aad;
+            background-color: #000;
+            color: white;
+            outline: none;
+            font-size: 25px;
+            box-sizing: border-box; /* Ensure padding is included in the width */
+        }
+        input[type="submit"] {
+            width: 20%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #004aad;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            outline: none;
+        }
+        input[type="submit"]:hover {
+            background-color: #003685;
+        }
+        .forgot-password {
+            color: #004aad;
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .signup-container {
+            margin-top: 10px;
+        }
+        .signup-text {
+            color: #004aad;
+            font-size: 25px;
+        }
+        .signup-button {
+            padding: 5px 10px;
+            background-color: #004aad;
+            color: white;
+            font-size: 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .signup-button:hover {
+            background-color: #003685;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>WELCOME</h2>
+        <img src="{{ url_for('static', filename='listening-music.webp') }}" alt="Music">
+        <form id="loginForm" onsubmit="return loginUser()" action="/login" method="post">
+            <div>
+                <img src="{{ url_for('static', filename='username_logo1.jpg') }}" alt="Username Icon">
+                <input type="text" name="username" placeholder="Username">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='pwd_icon1.jpg') }}" alt="Password Icon">
+                <input type="password" name="password" id="password" placeholder="Password">
+                <img src="{{ url_for('static', filename='show_eye.jpg') }}" alt="Show" id="showPwd" onclick="togglePassword()">
+            </div>
+            <input type="submit" value="LOGIN">
+        </form>
+
+        <p class="forgot-password" onclick="redirectToForgotPassword()">Forgot Password?</p>
+        <div class="signup-container">
+            <span class="signup-text">No Account Yet?</span>
+            <button class="signup-button" onclick="redirectToSignup()">Sign Up</button>
+        </div>
+    </div>
+    <script>
+        function loginUser() {
+            // Get form data
+            var formData = new FormData(document.getElementById("loginForm"));
+            // Send AJAX request to log in user
+            fetch('/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to the specified URL if authentication is successful
+                    window.location.href = data.redirect_url; // Redirect to '/dashboard' in this example
+                } else {
+                    alert(data.message); // Display login message if authentication fails
+                }
+            })
+            .catch(error => console.error('Error:', error));
+            return false; // Prevent default form submission
+        }
+
+        function togglePassword() {
+            var pwdField = document.getElementById("password");
+            var pwdToggle = document.getElementById("showPwd");
+            if (pwdField.type === "password") {
+                pwdField.type = "text";
+                pwdToggle.src = "/static/hide_eye.jpg";
+            } else {
+                pwdField.type = "password";
+                pwdToggle.src = "/static/show_eye.jpg";
+            }
+        }
+        function redirectToSignup() {
+            window.location.href = "/signup";
+        }
+
+        function redirectToForgotPassword() {
+            window.location.href = "/forgot_password";
+        }
+    </script>
+</body>
+</html>
