@@ -41,7 +41,7 @@ export default function Home() {
     const handleQuestionnaireComplete = (mood, playlistId) => {
         setQuestionnaireCompleted(true);
         setPlaylistId(playlistId);
-        navigate("/player", { state: { id: playlistId } });
+        navigate("/", { state: { id: playlistId } });
     };
 
     return !token ? (

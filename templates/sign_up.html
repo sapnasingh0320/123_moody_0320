@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Up Page</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Yu Gothic UI', sans-serif;
+            color: white;
+        }
+        .container {
+            margin: 0 auto;
+            max-width: 1500px;
+            padding: 20px;
+            background-color: #000029;
+            border: 2px solid #004aad;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            height: 800px;
+            font-size: 25px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 60%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-bottom: 2px solid #004aad;
+            background-color: #000029;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            font-size: 25px;
+            box-sizing: border-box; /* Ensure padding is included in the width */
+        }
+        input[type="submit"] {
+            width: 20%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #004aad;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+        input[type="submit"]:hover {
+            background-color: #003685;
+        }
+        .show-hide {
+            position: absolute;
+            top: 465px;
+            right: 150px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: left;
+            margin-top: 20px;
+            margin-left: 250px;
+        }
+        .radio-group label {
+            margin-right: 0px;
+        }
+        .custom-select {
+            font-size: 16px; /* Adjust the font size as needed */
+            padding: 8px; /* Adjust the padding as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SIGN-UP</h2>
+            <form id="signupForm" action="/register" method="post" onsubmit="return validateForm()">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Username">
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" placeholder="Email">
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Password">
+                    <img src="{{ url_for('static', filename='show_eye.jpg') }}" alt="Show" id="showPwd" onclick="togglePassword()">
+                </div>
+                <div>
+                    <label for="fname">First Name:</label>
+                    <input type="text" id="fname" name="first_name" placeholder="First Name">
+                </div>
+                <div>
+                    <label for="lname">Last Name:</label>
+                    <input type="text" id="lname" name="last_name" placeholder="Last Name">
+                </div>
+                <div>
+                    <label for="phone">Phone No.:</label>
+                    <input type="text" id="phone" name="phone_no" placeholder="Phone No.">
+                </div>
+                <div class="radio-group">
+                    <label>Gender:&nbsp;&nbsp;</label>
+                    <label for="male">
+                    <input type="radio" id="male" name="gender" value="male">
+                    Male&nbsp;&nbsp;
+                    </label>
+                    <label for="female">
+                        <input type="radio" id="female" name="gender" value="female">
+                        Female&nbsp;&nbsp;
+                    </label>
+                    <label for="other">
+                        <input type="radio" id="other" name="gender" value="other">
+                        Other&nbsp;&nbsp;
+                    </label>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <label>In Case You Forget Your Password:</label>
+                    <select id="security-question" name="security_question" class="custom-select">
+                        <option value="">Select a Security Question</option>
+                        <option value="1">What is the name of your first school?</option>
+                        <option value="2">What is the name of your first pet?</option>
+                        <option value="3">What city were you born in?</option>
+                        <option value="4">What is your favorite movie?</option>
+                        <option value="5">What is your favorite food?</option>
+                    </select>
+                    <input type="text" id="security-answer" name="security_answer" placeholder="Enter Your Answer" style="width: 50%; margin: 10px auto; display: block;">
+                </div>
+                <input type="submit" value="SIGN UP">
+            </form>
+    </div>
+    <script>
+        function validateForm() {
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var firstName = document.getElementById('fname').value;
+            var lastName = document.getElementById('lname').value;
+            var phone = document.getElementById('phone').value;
+            var securityQuestion = document.getElementById('security-question').value;
+            var securityAnswer = document.getElementById('security-answer').value;
+
+            // Simple validation example (you can expand/improve this as needed)
+            if (username.trim() === '' || email.trim() === '' || password.trim() === '' || firstName.trim() === '' || lastName.trim() === '' || phone.trim() === '' || securityQuestion === '' || securityAnswer.trim() === '') {
+                alert('Please fill in all fields.');
+                return false;
+            }
+
+            // Email validation regex pattern
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Email validation
+            if (!emailRegex.test(email)) {
+                alert('Please enter valid email id.');
+                return false;
+            }
+
+            var letters = /^[A-Za-z]+$/;
+            if (!firstName.match(letters)) {
+                alert("First name must contain only alphabets");
+                return false;
+            }
+            if (!lastName.match(letters)) {
+                alert("Last name must contain only alphabets");
+                return false;
+            }
+
+            var numbers = /^[0-9]+$/;
+            if (!phone.match(numbers) || phone.length !== 10) {
+                alert("Phone number must contain 10 digits and only numbers");
+                return false;
+            }
+
+            var specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+             if (password.length < 8 || !password.match(/[0-9]/) || !password.match(/[a-z]/) || !password.match(/[A-Z]/) || !password.match(specialCharacters)) {
+                alert("Password must be at least 8 characters long and contain at least 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character");
+                return false;
+            }
+            var formData = new FormData(document.getElementById("signupForm"));
+            // Send AJAX request to register user
+            fetch('/register', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // Display success message
+                } else {
+                    alert(data.message); // Display error message
+                }
+            })
+            .catch(error => console.error('Error:', error));
+            return false; // Prevent default form submission
+        }
+        function togglePassword() {
+            var pwdField = document.getElementById("password");
+            var pwdToggle = document.getElementById("showPwd");
+            if (pwdField.type === "password") {
+                pwdField.type = "text";
+                pwdToggle.src = "/static/hide_eye.jpg";
+            } else {
+                pwdField.type = "password";
+                pwdToggle.src = "/static/show_eye.jpg";
+            }
+        }
+    </script>
+</body>
+</html>

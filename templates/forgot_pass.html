@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Yu Gothic UI', sans-serif;
+            color: white;
+        }
+        .pwd-container {
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #000;
+            border: 2px solid #004aad;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            height: 500px;
+            font-size: 25px;
+            margin-top: 180px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 50%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-bottom: 2px solid #004aad;
+            background-color: #000;
+            color: white;
+            font-size: 25px;
+            outline: none;
+        }
+        input[type="submit"] {
+            width: 20%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #004aad;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+        input[type="submit"]:hover {
+            background-color: #003685;
+        }
+    </style>
+</head>
+<body>
+    <div class="pwd-container">
+        <h2>RESET PASSWORD</h2>
+        <form id="Forgot" onsubmit="return forgot()" action="/update_password" method="post">
+            <div>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" placeholder="Email">
+            </div>
+            <!-- <div>
+                <label for="securityQuestion">Security Question:</label>
+                <span id="securityQuestion">{{ security_question }}</span>
+            </div> -->
+            <div>
+                <label for="securityAnswer">Security Answer:</label>
+                <input type="text" id="securityAnswer" name="security_answer" placeholder="Security Answer">
+            </div>
+            <div>
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="new_password" placeholder="New Password">
+            </div>
+            <input type="submit" value="UPDATE">
+        </form>
+    </div>
+    <script>
+        function forgot() {
+
+            var email = document.getElementById("email").value;
+            var securityAnswer = document.getElementById("securityAnswer").value;
+            var newPassword = document.getElementById("newPassword").value;
+
+            // Password constraints
+            var specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (
+                newPassword.length < 8 ||
+                !newPassword.match(/[0-9]/) ||
+                !newPassword.match(/[a-z]/) ||
+                !newPassword.match(/[A-Z]/) ||
+                !newPassword.match(specialCharacters)
+            ) {
+                alert("Password must be at least 8 characters long and contain at least 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character");
+                return false;
+            }
+
+            // Check if the new password is the same as the previous password
+            var previousPassword = ""; // Set the previous password here
+            if (newPassword === previousPassword) {
+                alert("New password cannot be the same as the previous password");
+                return false;
+            }
+
+            // Get form data
+            var formData = new FormData(document.getElementById("Forgot"));
+            // Send AJAX request to update password
+            fetch('/update_password', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Display update message
+            })
+            .catch(error => console.error('Error:', error));
+            return false; // Prevent default form submission
+
+// <!--            // Get form data-->
+// <!--            var formData = new FormData(document.getElementById("Forgot"));-->
+// <!--            // Send AJAX request to log in user-->
+// <!--            fetch('/update_password', {-->
+// <!--                method: 'POST',-->
+// <!--                body: formData-->
+// <!--            })-->
+// <!--            .then(response => response.json())-->
+// <!--            .then(data => {-->
+// <!--                alert(data.message); // Display login message-->
+// <!--            })-->
+// <!--            .catch(error => console.error('Error:', error));-->
+// <!--            return false; // Prevent default form submission-->
+        }
+    </script>
+</body>
+</html>
